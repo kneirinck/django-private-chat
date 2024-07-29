@@ -56,7 +56,7 @@ setup(
         'django_private_chat',
     ],
     include_package_data=True,
-    install_requires=["django-model-utils>=2.6.1","django-braces>=1.10.0",
+    install_requires=["django-model-utils>=4.5.1","django-braces>=1.10.0",
                       "websockets==10.3"],
     license="ISCL",
     zip_safe=False,
