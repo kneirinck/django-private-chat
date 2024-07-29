@@ -121,12 +121,12 @@ async def new_messages_handler(stream):
         if session_id and msg and username_opponent:
             user_owner = await get_user_from_session(session_id)
             if user_owner:
-                user_opponent = get_user_model().objects.get(username=username_opponent)
-                dialog = get_dialogs_with_user(user_owner, user_opponent)
-                if len(dialog) > 0:
+                user_opponent = await get_user_model().objects.aget(username=username_opponent)
+                dialog = await get_dialogs_with_user(user_owner, user_opponent).afirst()
+                if dialog:
                     # Save the message
-                    msg = models.Message.objects.create(
-                        dialog=dialog[0],
+                    msg = await models.Message.objects.acreate(
+                        dialog=dialog,
                         sender=user_owner,
                         text=packet['message'],
                         read=False
@@ -214,7 +214,7 @@ async def read_message_handler(stream):
         if session_id and user_opponent and message_id is not None:
             user_owner = await get_user_from_session(session_id)
             if user_owner:
-                message = models.Message.objects.filter(id=message_id).first()
+                message = await models.Message.objects.filter(id=message_id).afirst()
                 if message:
                     message.read = True
                     message.save()
